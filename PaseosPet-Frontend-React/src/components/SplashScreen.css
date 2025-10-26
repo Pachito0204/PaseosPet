@@ -1,20 +1,47 @@
-import React, { useEffect } from "react";
-import "./SplashScreen.css";
-import logo from "../assets/paseospet-logo.png"; // coloca aquí tu logo
+.splash-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(180deg, #b3caff 0%, #ffffff 100%);
+  animation: fadeIn 1.5s ease-in-out;
+}
 
-const SplashScreen = ({ onFinish }) => {
-  useEffect(() => {
-    const timer = setTimeout(onFinish, 2500); // 2.5 segundos de duración
-    return () => clearTimeout(timer);
-  }, [onFinish]);
+.splash-logo {
+  width: 120px;
+  height: auto;
+  opacity: 0;
+  animation: fadeInLogo 2s ease-in-out forwards, glow 2.5s infinite ease-in-out;
+}
 
-  return (
-    <div className="splash-container">
-      <img src={logo} alt="PaseosPet" className="splash-logo" />
-      <h2 className="splash-text">PaseosPet</h2>
-    </div>
-  );
-};
+.splash-text {
+  margin-top: 15px;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #4b4bff;
+  letter-spacing: 0.5px;
+  opacity: 0;
+  animation: fadeInText 2.5s ease-in-out forwards;
+}
 
-export default SplashScreen;
+@keyframes fadeInLogo {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeInText {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.3); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
