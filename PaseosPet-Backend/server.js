@@ -1,37 +1,36 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import { sequelize } from "./src/config/db.js";
-import authRoutes from "./src/routes/auth.js";
-import petRoutes from "./src/routes/pets.js";
-import walkRoutes from "./src/routes/walks.js";
-import serviceRoutes from "./src/routes/services.js";
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const sequelize = require('./config/database');
+
+// models to register relations
+require('./models/User');
+require('./models/Pet');
+require('./models/Walk');
 
 dotenv.config();
+
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Ruta base para verificar que el backend está activo
-app.get("/", (req, res) => {
-  res.send("🐾 PaseosPet Backend funcionando correctamente en Render 🚀");
+app.get('/', (req, res) => {
+  res.send('PaseosPet API ok 🚀');
 });
 
-// Rutas principales de la API
-app.use("/api/auth", authRoutes);
-app.use("/api/pets", petRoutes);
-app.use("/api/walks", walkRoutes);
-app.use("/api/services", serviceRoutes);
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/pets', require('./routes/pets'));
+app.use('/api/walks', require('./routes/walks'));
 
-// Puerto
-const PORT = process.env.PORT || 10000;
-
-// Conexión con la base de datos y arranque del servidor
-sequelize
-  .sync()
-  .then(() => {
-    app.listen(PORT, () =>
-      console.log(`🚀 PaseosPet Backend corriendo en el puerto ${PORT}`)
-    );
-  })
-  .catch((err) => console.error("❌ Error de conexión a la BD:", err));
+(async () => {
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync({ alter: true });
+    console.log('✅ Conectado a PostgreSQL y modelos sincronizados');
+    const PORT = process.env.PORT || 10000;
+    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+  } catch (e) {
+    console.error('❌ Error inicializando la BD:', e.message);
+    process.exit(1);
+  }
+})();
