@@ -23,6 +23,7 @@ export default function Register() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+
       const data = await res.json();
 
       if (res.ok) {
@@ -32,8 +33,8 @@ export default function Register() {
         alert(data.error || "Error al registrar usuario");
       }
     } catch (error) {
-      console.error(error);
-      alert("Error al conectar con el servidor");
+      console.error("Error:", error);
+      alert("No se pudo conectar con el servidor.");
     }
   };
 
@@ -74,7 +75,9 @@ export default function Register() {
         </button>
       </form>
       {ok && (
-        <p className="text-green-600 mt-2">✅ Registro exitoso, redirigiendo...</p>
+        <p className="text-green-600 mt-2">
+          ✅ Registro exitoso. Redirigiendo...
+        </p>
       )}
       <p className="text-sm mt-3">
         ¿Ya tienes cuenta?{" "}
